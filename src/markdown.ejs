@@ -24,16 +24,13 @@
 ### HTTP Requests
 
 | Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
-| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
-<% for(metricName of standardMetrics) { %><% if(data.metrics[metricName]) { %>
+| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |<% for(metricName of standardMetrics) { %><% if(data.metrics[metricName]) { %>
 | **<%= metricName %>** | `<% if(data.metrics[metricName].values.count) { %><%= data.metrics[metricName].values.count.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.rate) { %><%= data.metrics[metricName].values.rate.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.avg) { %><%= data.metrics[metricName].values.avg.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.max) { %><%= data.metrics[metricName].values.max.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.med) { %><%= data.metrics[metricName].values.med.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.min) { %><%= data.metrics[metricName].values.min.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(90)']) { %><%= data.metrics[metricName].values['p(90)'].toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(95)']) { %><%= data.metrics[metricName].values['p(95)'].toFixed(2) %><% } %>` |<% } %><% } %>
 
 ### Custom Metrics
 
 | Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
-| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
-<% first = true %><% var sortedMetrics = {}; %><% Object.keys(data.metrics).sort().forEach(function(k) { %><% sortedMetrics[k] = data.metrics[k]; %><% }); %><% for(metricName in sortedMetrics) { %><% if(standardMetrics.includes(metricName) || otherMetrics.includes(metricName)) { continue } %><% var metric = sortedMetrics[metricName]; %><% if(first) { %>
-<% first = false %><% } %>
+| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |<% first = true %><% var sortedMetrics = {}; %><% Object.keys(data.metrics).sort().forEach(function(k) { %><% sortedMetrics[k] = data.metrics[k]; %><% }); %><% for(metricName in sortedMetrics) { %><% if(standardMetrics.includes(metricName) || otherMetrics.includes(metricName)) { continue } %><% var metric = sortedMetrics[metricName]; %><% if(first) { %><% first = false %><% } %>
 | **<%= metricName %>** | `<% if(metric.values.count) { %><%= metric.values.count.toFixed(2) %><% } %>` | `<% if(metric.values.rate) { %><%= metric.values.rate.toFixed(2) %><% } %>` | `<% if(metric.values.avg) { %><%= metric.values.avg.toFixed(2) %><% } %>` | `<% if(metric.values.max) { %><%= metric.values.max.toFixed(2) %><% } %>` | `<% if(metric.values.med) { %><%= metric.values.med.toFixed(2) %><% } %>` | `<% if(metric.values.min) { %><%= metric.values.min.toFixed(2) %><% } %>` | `<% if(metric.values['p(90)']) { %><%= metric.values['p(90)'].toFixed(2) %><% } %>` | `<% if(metric.values['p(95)']) { %><%= metric.values['p(95)'].toFixed(2) %><% } %>` |<% } %>
 
 ## Other Stats
