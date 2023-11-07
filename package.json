@@ -1,6 +1,6 @@
 {
   "name": "k6-reporter",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Export K6 test summary as a HTML report",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   "keywords": [
     "k6",
     "load-testing",
-    "reporting"
+    "reporting",
+    "markdown"
   ],
   "scripts": {
     "build": "webpack",
