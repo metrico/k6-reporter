@@ -7,8 +7,8 @@
 
 ## Failed Requests
 
-- **Passes**: <%= data.metrics.checks.passes %>
-- **Failures**: <%= data.metrics.checks.fails %>
+- **Passes**: <%= data.metrics.checks ? data.metrics.checks.passes : 0 %>
+- **Failures**: <%= data.metrics.checks ? data.metrics.checks.fails : 0 %>
 
 ## Breached Thresholds
 
@@ -16,7 +16,7 @@
 
 ## Failed Checks
 
-- <%= data.metrics.checks.fails %>
+- <%= data.metrics.checks ? data.metrics.checks.fails : 0 %>
 
 ## Request Metrics
 
@@ -24,9 +24,11 @@
 
 | Metric                  | Count   | Rate    | Average | Maximum | Median  | Minimum | 90th Percentile | 95th Percentile |
 | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | --------------- | --------------- |
-<% for (metricName of data.metrics.http_reqs ? Object.keys(data.metrics.http_reqs.values) : []) { %>
+<% if (data.metrics.http_reqs && data.metrics.http_reqs.values) {
+    for (metricName of Object.keys(data.metrics.http_reqs.values)) { %>
 | **<%= metricName %>** | <%= data.metrics.http_reqs.values[metricName].count.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].rate.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].avg.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].max.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].med.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].min.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName]['p(90)'].toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName]['p(95)'].toFixed(2) %> |
-<% } %>
+<%   }
+} %>
 
 ### Custom Metrics
 
@@ -44,8 +46,8 @@ All times are in milli-seconds
 
 ### Checks
 
-- **Passed**: <%= data.metrics.checks.passes %>
-- **Failed**: <%= data.metrics.checks.fails %>
+- **Passed**: <%= data.metrics.checks ? data.metrics.checks.passes : 0 %>
+- **Failed**: <%= data.metrics.checks ? data.metrics.checks.fails : 0 %>
 
 ### Iterations
 
