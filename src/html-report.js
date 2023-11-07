@@ -9,7 +9,7 @@
 // Have to import ejs this way, nothing else works
 import ejs from '../node_modules/ejs/ejs.min.js'
 import template from './template.ejs'
-import markdown from './markdown.ejs'
+import md_template from './markdown.ejs'
 
 const version = '2.3.1'
 
@@ -198,7 +198,7 @@ export function markdownReport(data, opts = {}) {
   ]
 
   // Render the markdown template
-  const markdown = ejs.render(markdown, {
+  const markdown = ejs.render(md_template, {
     data,
     title: opts.title,
     standardMetrics,
