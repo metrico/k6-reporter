@@ -2,12 +2,14 @@
 
 ## Total Requests
 
-- **HTTP Requests**: `<%= data.metrics.http_reqs.values.count %>`
-- **gRPC Requests**: `<%= data.metrics.grpc_reqs ? data.metrics.grpc_reqs.values.count : '' %>`
+- **HTTP Requests**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.count %><% } %>`
+- **gRPC Requests**: `<% if(data.metrics.grpc_reqs) { %><%= data.metrics.grpc_reqs.values.count %><% } %>`
 
+<% if(data.metrics.http_req_failed && data.metrics.http_req_failed.values) { %>
 ## Failed Requests
 
-- **Passes**: `<%= data.metrics.http_req_failed ? data.metrics.http_req_failed.values.passes : '' %>`
+- **Passes**: `<%= data.metrics.http_req_failed.values.passes %>`
+<% } %>
 
 ## Breached Thresholds
 
@@ -21,84 +23,79 @@
 
 ### HTTP Requests
 
-| Metric | Count | Rate | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **http_req_duration** | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.count : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.rate : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.avg : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.max : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.med : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values.min : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_duration ? data.metrics.http_req_duration.values['p(95)'] : '' %>` |
-| **http_req_waiting** | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.count : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.rate : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.avg : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.max : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.med : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values.min : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_waiting ? data.metrics.http_req_waiting.values['p(95)'] : '' %>` |
-| **http_req_connecting** | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.count : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.rate : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.avg : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.max : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.med : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values.min : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_connecting ? data.metrics.http_req_connecting.values['p(95)'] : '' %>` |
-| **http_req_tls_handshaking** | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.count : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.rate : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.avg : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.max : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.med : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values.min : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_tls_handshaking ? data.metrics.http_req_tls_handshaking.values['p(95)'] : '' %>` |
-| **http_req_sending** | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.count : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.rate : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.avg : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.max : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.med : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values.min : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_sending ? data.metrics.http_req_sending.values['p(95)'] : '' %>` |
-| **http_req_receiving** | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.count : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.rate : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.avg : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.max : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.med : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values.min : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_receiving ? data.metrics.http_req_receiving.values['p(95)'] : '' %>` |
-| **http_req_blocked** | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.count : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.rate : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.avg : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.max : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.med : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values.min : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values['p(90)'] : '' %>` | `<%= data.metrics.http_req_blocked ? data.metrics.http_req_blocked.values['p(95)'] : '' %>` |
-| **iteration_duration** | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.count : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.rate : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.avg : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.max : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.med : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values.min : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values['p(90)'] : '' %>` | `<%= data.metrics.iteration_duration ? data.metrics.iteration_duration.values['p(95)'] : '' %>` |
-| **group_duration** | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.count : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.rate : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.avg : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.max : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.med : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values.min : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values['p(90)'] : '' %>` | `<%= data.metrics.group_duration ? data.metrics.group_duration.values['p(95)'] : '' %>` |
+| Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
+| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
+<% for(metricName of standardMetrics) { %>
+<% if(data.metrics[metricName]) { %>| **<%= metricName %>** | `<% if(data.metrics[metricName].values.count) { %><%= data.metrics[metricName].values.count.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.rate) { %><%= data.metrics[metricName].values.rate.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.avg) { %><%= data.metrics[metricName].values.avg.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.max) { %><%= data.metrics[metricName].values.max.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.med) { %><%= data.metrics[metricName].values.med.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.min) { %><%= data.metrics[metricName].values.min.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(90)']) { %><%= data.metrics[metricName].values['p(90)'].toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(95)']) { %><%= data.metrics[metricName].values['p(95)'].toFixed(2) %><% } %>` |
+<% } %>
+<% } %>
 
 ### Custom Metrics
 
-| Metric | Count | Rate | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **checks{type:read}** | `<%= data.metrics.custom ? data.metrics.custom.read : '' %>` | `` | `` | `` | `` | `` | `` | `` |
-| **checks{type:write}** | `<%= data.metrics.custom ? data.metrics.custom.write : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.write_rate : '' %>` | `` | `` | `` | `` | `` | `` |
-| **http_req_duration{type:read}** | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read.count : '' %>` | `` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read.avg : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read.max : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read.med : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read.min : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read['p(90)'] : '' %>` | `<%= data.metrics.custom ? data.metrics.custom.http_req_duration.read['p(95)'] : '' %>` |
-| **http_req_duration{url:http://de5.sipcapture.io:3100/api/v1/prom/remote/write}** | `` | `` | `` | `` | `` | `` | `` | `` |
+| Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
+| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
+<% first = true %>
+<% var sortedMetrics = {}; %>
+<% Object.keys(data.metrics).sort().forEach(function(k) { %>
+<% sortedMetrics[k] = data.metrics[k]; %>
+<% }); %>
+<% for(metricName in sortedMetrics) { %>
+<% if(standardMetrics.includes(metricName) || otherMetrics.includes(metricName)) { continue } %>
+<% var metric = sortedMetrics[metricName]; %>
+<% if(first) { %>| **<%= metricName %>** | `<% if(metric.values.count) { %><%= metric.values.count.toFixed(2) %><% } %>` | `<% if(metric.values.rate) { %><%= metric.values.rate.toFixed(2) %><% } %>` | `<% if(metric.values.avg) { %><%= metric.values.avg.toFixed(2) %><% } %>` | `<% if(metric.values.max) { %><%= metric.values.max.toFixed(2) %><% } %>` | `<% if(metric.values.med) { %><%= metric.values.med.toFixed(2) %><% } %>` | `<% if(metric.values.min) { %><%= metric.values.min.toFixed(2) %><% } %>` | `<% if(metric.values['p(90)']) { %><%= metric.values['p(90)'].toFixed(2) %><% } %>` | `<% if(metric.values['p(95)']) { %><%= metric.values['p(95)'].toFixed(2) %><% } %>` |
+<% first = false %>
+<% } %>
+<% } %>
 
 #### Note
-All times are in milli-seconds
+All times are in milliseconds
 
 ## Other Stats
 
 ### Checks
 
-- **Passed**: `<%= data.checks.passes || '0' %>`
-- **Failed**: `<%= data.checks.failures || '0' %>`
+- **Passed**: `<% if(data.metrics.checks) { %><%= data.metrics.checks.values.passes %><% } %>`
+- **Failed**: `<% if(data.metrics.checks) { %><%= data.metrics.checks.values.fails %><% } %>`
 
 ### Iterations
 
-- **Total**: `<%= data.metrics.iterations.total || '0' %>`
-- **Rate**: `<%= data.metrics.iterations.rate || '0' %>/s`
+- **Total**: `<% if(data.metrics.iterations) { %><%= data.metrics.iterations.values.count %><% } %>`
+- **Rate**: `<% if(data.metrics.iterations) { %><%= data.metrics.iterations.values.rate.toFixed(2) %>/s<% } %>`
 
 ### Virtual Users
 
-- **Min**: `<%= data.vus.min || '0' %>`
-- **Max**: `<%= data.vus.max || '0' %>`
+- **Min**: `<%= data.metrics.vus ? data.metrics.vus.values.min : 1 %>`
+- **Max**: `<%= data.metrics.vus ? data.metrics.vus.values.max : 1 %>`
 
 ### Requests
 
-- **Total**: `<%= data.metrics.http_reqs.total || '0' %>`
-- **Rate**: `<%= data.metrics.http_reqs.rate || '0' %>/s`
+- **Total**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.count %><% } %>`
+- **Rate**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.rate.toFixed(2) %>/s<% } %>`
 
 ### Data Received
 
-- **Total**: `<%= data.metrics.data_received.total || '0' %>`
-- **Rate**: `<%= data.metrics.data_received.rate || '0' %> mB/s`
+- **Total**: `<%= (data.metrics.data_received.values.count/1000000).toFixed(2) %> MB`
+- **Rate**: `<%= (data.metrics.data_received.values.rate/1000000).toFixed(2) %> MB/s`
 
 ### Data Sent
 
-- **Total**: `<%= data.metrics.data_sent.total || '0' %>`
-- **Rate**: `<%= data.metrics.data_sent.rate || '0' %> mB/s`
+- **Total**: `<%= (data.metrics.data_sent.values.count/1000000).toFixed(2) %> MB`
+- **Rate**: `<%= (data.metrics.data_sent.values.rate/1000000).toFixed(2) %> MB/s`
 
 ## Checks & Groups
 
-<% for (const groupName in data.checkGroups) { %>
-<% const group = data.checkGroups[groupName]; %>
-
-### Group - <%= groupName %>
+<% for(group of data.root_group.groups) { %>
+### Group - <%= group.name %>
 
 | Check Name | Passes | Failures |
-| --- | --- | --- |
-<% for (const checkName in group.checks) { %>
-| <%= checkName %> | `<%= group.checks[checkName].passes || '0' %>` | `<%= group.checks[checkName].failures || '0' %>` |
-<% } %>
+| ---------- | ------ | -------- |
+<% for(check of group.checks) { %>| <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |<% } %>
 <% } %>
 
 ### Other Checks
 
-<% for (const checkName in data.checks) { %>
 | Check Name | Passes | Failures |
-| --- | --- | --- |
-<% if (checkName !== 'passes' && checkName !== 'failures') { %>
-| <%= checkName %> | `<%= data.checks[checkName].passes || '0' %>` | `<%= data.checks[checkName].failures || '0' %>` |
-<% } %>
-<% } %>
+| ---------- | ------ | -------- |
+<% for(check of data.root_group.checks) { %>| <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |<% } %>
 
 K6 Markdown Reporter v2.3.1 [GitHub](https://github.com/metrico/k6-reporter)
