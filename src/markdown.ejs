@@ -2,98 +2,68 @@
 
 ## Total Requests
 
-- **HTTP Requests**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.count %><% } %>`
-- **gRPC Requests**: `<% if(data.metrics.grpc_reqs) { %><%= data.metrics.grpc_reqs.values.count %><% } %>`
+- **HTTP Requests**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.count : 0 %>`
+- **gRPC Requests**: `<%= data.metrics.grpc_reqs ? data.metrics.grpc_reqs.values.count : 0 %>`
+- **Passes**: `<%= data.metrics.http_req_failed ? data.metrics.http_req_failed.values.passes : 0 %>`
+- **Breached Thresholds**: `<%= thresholdFailures %>`
+- **Failed Checks**: `<%= data.root_group.checks.length %>`
 
-<% if(data.metrics.http_req_failed && data.metrics.http_req_failed.values) { %>
-## Failed Requests
+## Request Metrics (HTTP)
 
-- **Passes**: `<%= data.metrics.http_req_failed.values.passes %>`
+| Metric                  | Count   | Rate    | Average | Maximum | Median  | Minimum | 90th Pctl | 95th Pctl |
+| ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | ---------- | ---------- |
+<% for (metricName of standardMetrics) { %>
+| **<%= metricName %>** | <%= data.metrics[metricName] ? data.metrics[metricName].values.count.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.rate.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.avg.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.max.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.med.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.min.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(90)'].toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(95)'].toFixed(2) : '' %> |
 <% } %>
 
-## Breached Thresholds
+## Custom Metrics
 
-- `<%= thresholdFailures %>`
-
-## Failed Checks
-
-- `<%= checkFailures %>`
-
-## Request Metrics
-
-### HTTP Requests
-
-| Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
-| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
-<% for(metricName of standardMetrics) { %>
-<% if(data.metrics[metricName]) { %>
-| **<%= metricName %>** | `<% if(data.metrics[metricName].values.count) { %><%= data.metrics[metricName].values.count.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.rate) { %><%= data.metrics[metricName].values.rate.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.avg) { %><%= data.metrics[metricName].values.avg.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.max) { %><%= data.metrics[metricName].values.max.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.med) { %><%= data.metrics[metricName].values.med.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values.min) { %><%= data.metrics[metricName].values.min.toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(90)']) { %><%= data.metrics[metricName].values['p(90)'].toFixed(2) %><% } %>` | `<% if(data.metrics[metricName].values['p(95)']) { %><%= data.metrics[metricName].values['p(95)'].toFixed(2) %><% } %>` |
+| Metric                       | Count | Rate  | Average | Maximum | Median | Minimum | 90th Pctl | 95th Pctl |
+| ---------------------------- | ----- | ----- | ------- | ------- | ------ | ------- | ---------- | ---------- |
+<% for (metricName of Object.keys(data.metrics).filter(metricName => !standardMetrics.includes(metricName) && otherMetrics.includes(metricName)) { %>
+| **<%= metricName %>** | <%= data.metrics[metricName].values.count.toFixed(2) %> | <%= data.metrics[metricName].values.rate.toFixed(2) %> | <%= data.metrics[metricName].values.avg.toFixed(2) %> | <%= data.metrics[metricName].values.max.toFixed(2) %> | <%= data.metrics[metricName].values.med.toFixed(2) %> | <%= data.metrics[metricName].values.min.toFixed(2) %> | <%= data.metrics[metricName].values['p(90)'].toFixed(2) %> | <%= data.metrics[metricName].values['p(95)'].toFixed(2) %> |
 <% } %>
-<% } %>
-
-### Custom Metrics
-
-| Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
-| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
-<% first = true %>
-<% var sortedMetrics = {}; %>
-<% Object.keys(data.metrics).sort().forEach(function(k) { %>
-<% sortedMetrics[k] = data.metrics[k]; %>
-<% }); %>
-<% for(metricName in sortedMetrics) { %>
-<% if(standardMetrics.includes(metricName) || otherMetrics.includes(metricName)) { continue } %>
-<% var metric = sortedMetrics[metricName]; %>
-<% if(first) { %>
-| Metric          | Count     | Rate      | Average   | Maximum   | Median    | Minimum   | 90th Percentile | 95th Percentile |
-| --------------- | --------- | --------- | --------- | --------- | --------- | --------- | --------------- | --------------- |
-<% first = false %>
-<% } %>
-| **<%= metricName %>** | `<% if(metric.values.count) { %><%= metric.values.count.toFixed(2) %><% } %>` | `<% if(metric.values.rate) { %><%= metric.values.rate.toFixed(2) %><% } %>` | `<% if(metric.values.avg) { %><%= metric.values.avg.toFixed(2) %><% } %>` | `<% if(metric.values.max) { %><%= metric.values.max.toFixed(2) %><% } %>` | `<% if(metric.values.med) { %><%= metric.values.med.toFixed(2) %><% } %>` | `<% if(metric.values.min) { %><%= metric.values.min.toFixed(2) %><% } %>` | `<% if(metric.values['p(90)']) { %><%= metric.values['p(90)'].toFixed(2) %><% } %>` | `<% if(metric.values['p(95)']) { %><%= metric.values['p(95)'].toFixed(2) %><% } %>` |
-<% } %>
-
-#### Note
-All times are in milli-seconds
 
 ## Other Stats
 
 ### Checks
 
-- **Passed**: `<% if(data.metrics.checks) { %><%= data.metrics.checks.values.passes %><% } %>`
-- **Failed**: `<% if(data.metrics.checks) { %><%= data.metrics.checks.values.fails %><% } %>`
+- **Passed**: `<%= data.metrics.checks ? data.metrics.checks.values.passes : 0 %>`
+- **Failed**: `<%= data.metrics.checks ? data.metrics.checks.values.fails : 0 %>`
 
 ### Iterations
 
-- **Total**: `<% if(data.metrics.iterations) { %><%= data.metrics.iterations.values.count %><% } %>`
-- **Rate**: `<% if(data.metrics.iterations) { %><%= data.metrics.iterations.values.rate.toFixed(2) %>/s<% } %>`
+- **Total**: `<%= data.metrics.iterations ? data.metrics.iterations.values.count : 0 %>`
+- **Rate**: `<%= data.metrics.iterations ? data.metrics.iterations.values.rate.toFixed(2) + '/s' : '0' %>`
 
 ### Virtual Users
 
-- **Min**: `<%= data.metrics.vus ? data.metrics.vus.values.min : 1 %>`
-- **Max**: `<%= data.metrics.vus ? data.metrics.vus.values.max : 1 %>`
+- **Min**: `<%= data.metrics.vus ? data.metrics.vus.values.min : 0 %>`
+- **Max**: `<%= data.metrics.vus ? data.metrics.vus.values.max : 0 %>`
 
 ### Requests
 
-- **Total**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.count %><% } %>`
-- **Rate**: `<% if(data.metrics.http_reqs) { %><%= data.metrics.http_reqs.values.rate.toFixed(2) %>/s<% } %>`
+- **Total**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.count : 0 %>`
+- **Rate**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.rate.toFixed(2) + '/s' : '0' %>`
 
 ### Data Received
 
-- **Total**: `<%= (data.metrics.data_received.values.count/1000000).toFixed(2) %> MB`
-- **Rate**: `<%= (data.metrics.data_received.values.rate/1000000).toFixed(2) %> mB/s`
+- **Total**: `<%= (data.metrics.data_received.values.count / 1000000).toFixed(2) %> MB`
+- **Rate**: `<%= (data.metrics.data_received.values.rate / 1000000).toFixed(2) %> mB/s`
 
 ### Data Sent
 
-- **Total**: `<%= (data.metrics.data_sent.values.count/1000000).toFixed(2) %> MB`
-- **Rate**: `<%= (data.metrics.data_sent.values.rate/1000000).toFixed(2) %> mB/s`
+- **Total**: `<%= (data.metrics.data_sent.values.count / 1000000).toFixed(2) %> MB`
+- **Rate**: `<%= (data.metrics.data_sent.values.rate / 1000000).toFixed(2) %> mB/s`
 
 ## Checks & Groups
 
-<% for(group of data.root_group.groups) { %>
+<% for (group of data.root_group.groups) { %>
 ### Group - <%= group.name %>
 
 | Check Name | Passes | Failures |
 | ---------- | ------ | -------- |
-<% for(check of group.checks) { %>
+<% for (check of group.checks) { %>
 | <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
 <% } %>
 <% } %>
@@ -101,9 +71,9 @@ All times are in milli-seconds
 ### Other Checks
 
 | Check Name | Passes | Failures |
-| ---------- | ------ | -------- |
-<% for(check of data.root_group.checks) { %>
+| ----------  | ------ | -------- |
+<% for (check of data.root_group.checks) { %>
 | <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
 <% } %>
 
-K6 Markdown Reporter v<%= version %> [GitHub](https://github.com/metrico/k6-reporter)
+K6 Markdown Reporter v<%= version %> - [GitHub](https://github.com/benc-uk/k6-reporter)
