@@ -2,20 +2,21 @@
 
 ## Total Requests
 
-- **HTTP Requests**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.count : 0 %>`
-- **gRPC Requests**: `<%= data.metrics.grpc_reqs ? data.metrics.grpc_reqs.values.count : 0 %>`
+- **HTTP Requests**: <%= data.metrics.http_reqs ? data.metrics.http_reqs.count : 0 %>
+- **gRPC Requests**: <%= data.metrics.grpc_reqs ? data.metrics.grpc_reqs.count : 0 %>
 
 ## Failed Requests
 
-- **Passes**: `<%= data.metrics.http_req_failed ? data.metrics.http_req_failed.values.passes : 0 %>`
+- **Passes**: <%= data.metrics.checks.passes %>
+- **Failures**: <%= data.metrics.checks.fails %>
 
 ## Breached Thresholds
 
-- `<%= thresholdFailures %>`
+- <%= thresholdFailures %>
 
 ## Failed Checks
 
-- `<%= data.root_group.checks.length %>`
+- <%= data.metrics.checks.fails %>
 
 ## Request Metrics
 
@@ -23,68 +24,72 @@
 
 | Metric                  | Count   | Rate    | Average | Maximum | Median  | Minimum | 90th Percentile | 95th Percentile |
 | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | --------------- | --------------- |
-<% for (metricName of standardMetrics) { %>
-| **<%= metricName %>** | <%= data.metrics[metricName] ? data.metrics[metricName].values.count.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.rate.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.avg.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.max.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.med.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.min.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(90)'].toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(95)'].toFixed(2) : '' %> |
+<% for (metricName of data.metrics.http_reqs ? Object.keys(data.metrics.http_reqs.values) : []) { %>
+| **<%= metricName %>** | <%= data.metrics.http_reqs.values[metricName].count.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].rate.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].avg.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].max.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].med.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName].min.toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName]['p(90)'].toFixed(2) %> | <%= data.metrics.http_reqs.values[metricName]['p(95)'].toFixed(2) %> |
 <% } %>
 
 ### Custom Metrics
 
 | Metric                       | Count | Rate  | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
 | ---------------------------- | ----- | ----- | ------- | ------- | ------ | ------- | --------------- | --------------- |
-<% for (metricName of Object.keys(data.metrics).filter(metricName => !standardMetrics.includes(metricName) && otherMetrics.includes(metricName)) { %>
-| **<%= metricName %>** | <%= data.metrics[metricName].values.count.toFixed(2) %> | <%= data.metrics[metricName].values.rate.toFixed(2) %> | <%= data.metrics[metricName].values.avg.toFixed(2) %> | <%= data.metrics[metricName].values.max.toFixed(2) %> | <%= data.metrics[metricName].values.med.toFixed(2) %> | <%= data.metrics[metricName].values.min.toFixed(2) %> | <%= data.metrics[metricName].values['p(90)'].toFixed(2) %> | <%= data.metrics[metricName].values['p(95)'].toFixed(2) %> |
+<% for (metricName of Object.keys(data.metrics).filter(metricName => metricName !== 'http_reqs' && metricName !== 'grpc_reqs' && metricName !== 'checks' && metricName !== 'iterations' && metricName !== 'vus' && metricName !== 'data_received' && metricName !== 'data_sent' && metricName !== 'thresholds' && metricName !== 'environment' && metricName !== 'start_time')) { %>
+| **<%= metricName %>** | <%= data.metrics[metricName].count.toFixed(2) %> | <%= data.metrics[metricName].rate.toFixed(2) %> | <%= data.metrics[metricName].avg.toFixed(2) %> | <%= data.metrics[metricName].max.toFixed(2) %> | <%= data.metrics[metricName].med.toFixed(2) %> | <%= data.metrics[metricName].min.toFixed(2) %> | <%= data.metrics[metricName]['p(90)'].toFixed(2) %> | <%= data.metrics[metricName]['p(95)'].toFixed(2) %> |
 <% } %>
+
+### Note
+
+All times are in milli-seconds
 
 ## Other Stats
 
 ### Checks
 
-- **Passed**: `<%= data.metrics.checks ? data.metrics.checks.values.passes : 0 %>`
-- **Failed**: `<%= data.metrics.checks ? data.metrics.checks.values.fails : 0 %>`
+- **Passed**: <%= data.metrics.checks.passes %>
+- **Failed**: <%= data.metrics.checks.fails %>
 
 ### Iterations
 
-- **Total**: `<%= data.metrics.iterations ? data.metrics.iterations.values.count : 0 %>`
-- **Rate**: `<%= data.metrics.iterations ? data.metrics.iterations.values.rate.toFixed(2) + '/s' : '0' %>`
+- **Total**: <%= data.metrics.iterations ? data.metrics.iterations.count : 0 %>
+- **Rate**: <%= data.metrics.iterations ? data.metrics.iterations.rate.toFixed(2) + '/s' : '0' %>
 
 ### Virtual Users
 
-- **Min**: `<%= data.metrics.vus ? data.metrics.vus.values.min : 0 %>`
-- **Max**: `<%= data.metrics.vus ? data.metrics.vus.values.max : 0 %>`
+- **Min**: <%= data.metrics.vus ? data.metrics.vus.min : 0 %>
+- **Max**: <%= data.metrics.vus ? data.metrics.vus.max : 0 %>
 
 ### Requests
 
-- **Total**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.count : 0 %>`
-- **Rate**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.rate.toFixed(2) + '/s' : '0' %>`
+- **Total**: <%= data.metrics.http_reqs ? data.metrics.http_reqs.count : 0 %>
+- **Rate**: <%= data.metrics.http_reqs ? data.metrics.http_reqs.rate.toFixed(2) + '/s' : '0' %>
 
 ### Data Received
 
-- **Total**: `<%= (data.metrics.data_received.values.count / 1000000).toFixed(2) %> MB`
-- **Rate**: `<%= (data.metrics.data_received.values.rate / 1000000).toFixed(2) %> mB/s`
+- **Total**: <%= (data.metrics.data_received ? data.metrics.data_received.count / 1000000 : 0).toFixed(2) %> MB
+- **Rate**: <%= (data.metrics.data_received ? data.metrics.data_received.rate / 1000000 : 0).toFixed(2) %> mB/s
 
 ### Data Sent
 
-- **Total**: `<%= (data.metrics.data_sent.values.count / 1000000).toFixed(2) %> MB`
-- **Rate**: `<%= (data.metrics.data_sent.values.rate / 1000000).toFixed(2) %> mB/s`
+- **Total**: <%= (data.metrics.data_sent ? data.metrics.data_sent.count / 1000000 : 0).toFixed(2) %> MB
+- **Rate**: <%= (data.metrics.data_sent ? data.metrics.data_sent.rate / 1000000 : 0).toFixed(2) %> mB/s
 
 ## Checks & Groups
 
-<% for (group of data.root_group.groups) { %>
+<% for (group of data.groups) { %>
 ### Group - <%= group.name %>
 
-| Check Name                                       | Passes | Failures |
-| ----------------------------------------------- | ------ | -------- |
+| Check Name     | Passes | Failures |
+| -------------- | ------ | -------- |
 <% for (check of group.checks) { %>
-| <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
+| <%= check.name %> | <%= check.passes %> | <%= check.fails %> |
 <% } %>
 <% } %>
 
 ### Other Checks
 
 | Check Name     | Passes | Failures |
-| -------------  | ------ | -------- |
-<% for (check of data.root_group.checks) { %>
-| <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
+| -------------- | ------ | -------- |
+<% for (check of data.checks) { %>
+| <%= check.name %> | <%= check.passes %> | <%= check.fails %> |
 <% } %>
 
 K6 Markdown Reporter v<%= version %> [GitHub](https://github.com/metrico/k6-reporter)
