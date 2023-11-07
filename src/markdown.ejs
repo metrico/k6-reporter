@@ -4,22 +4,33 @@
 
 - **HTTP Requests**: `<%= data.metrics.http_reqs ? data.metrics.http_reqs.values.count : 0 %>`
 - **gRPC Requests**: `<%= data.metrics.grpc_reqs ? data.metrics.grpc_reqs.values.count : 0 %>`
+
+## Failed Requests
+
 - **Passes**: `<%= data.metrics.http_req_failed ? data.metrics.http_req_failed.values.passes : 0 %>`
-- **Breached Thresholds**: `<%= thresholdFailures %>`
-- **Failed Checks**: `<%= data.root_group.checks.length %>`
 
-## Request Metrics (HTTP)
+## Breached Thresholds
 
-| Metric                  | Count   | Rate    | Average | Maximum | Median  | Minimum | 90th Pctl | 95th Pctl |
-| ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | ---------- | ---------- |
+- `<%= thresholdFailures %>`
+
+## Failed Checks
+
+- `<%= data.root_group.checks.length %>`
+
+## Request Metrics
+
+### HTTP Requests
+
+| Metric                  | Count   | Rate    | Average | Maximum | Median  | Minimum | 90th Percentile | 95th Percentile |
+| ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | --------------- | --------------- |
 <% for (metricName of standardMetrics) { %>
 | **<%= metricName %>** | <%= data.metrics[metricName] ? data.metrics[metricName].values.count.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.rate.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.avg.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.max.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.med.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values.min.toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(90)'].toFixed(2) : '' %> | <%= data.metrics[metricName] ? data.metrics[metricName].values['p(95)'].toFixed(2) : '' %> |
 <% } %>
 
-## Custom Metrics
+### Custom Metrics
 
-| Metric                       | Count | Rate  | Average | Maximum | Median | Minimum | 90th Pctl | 95th Pctl |
-| ---------------------------- | ----- | ----- | ------- | ------- | ------ | ------- | ---------- | ---------- |
+| Metric                       | Count | Rate  | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
+| ---------------------------- | ----- | ----- | ------- | ------- | ------ | ------- | --------------- | --------------- |
 <% for (metricName of Object.keys(data.metrics).filter(metricName => !standardMetrics.includes(metricName) && otherMetrics.includes(metricName)) { %>
 | **<%= metricName %>** | <%= data.metrics[metricName].values.count.toFixed(2) %> | <%= data.metrics[metricName].values.rate.toFixed(2) %> | <%= data.metrics[metricName].values.avg.toFixed(2) %> | <%= data.metrics[metricName].values.max.toFixed(2) %> | <%= data.metrics[metricName].values.med.toFixed(2) %> | <%= data.metrics[metricName].values.min.toFixed(2) %> | <%= data.metrics[metricName].values['p(90)'].toFixed(2) %> | <%= data.metrics[metricName].values['p(95)'].toFixed(2) %> |
 <% } %>
@@ -61,8 +72,8 @@
 <% for (group of data.root_group.groups) { %>
 ### Group - <%= group.name %>
 
-| Check Name | Passes | Failures |
-| ---------- | ------ | -------- |
+| Check Name                                       | Passes | Failures |
+| ----------------------------------------------- | ------ | -------- |
 <% for (check of group.checks) { %>
 | <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
 <% } %>
@@ -70,10 +81,10 @@
 
 ### Other Checks
 
-| Check Name | Passes | Failures |
-| ----------  | ------ | -------- |
+| Check Name     | Passes | Failures |
+| -------------  | ------ | -------- |
 <% for (check of data.root_group.checks) { %>
 | <%= check.name %> | `<%= check.passes %>` | `<%= check.fails %>` |
 <% } %>
 
-K6 Markdown Reporter v<%= version %> - [GitHub](https://github.com/benc-uk/k6-reporter)
+K6 Markdown Reporter v<%= version %> [GitHub](https://github.com/metrico/k6-reporter)
